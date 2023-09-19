@@ -106,31 +106,31 @@ succℤ = ℤ-ind 1ℤ (in-pos one) 0ℤ (λ n _ → in-pos (succ² n)) (λ n _ 
 # Dependent pair type
 
 ```agda
-data ∑ (A : Set ℓ) (B : A → Set o) : Set (ℓ ⊔ o) where
-  _,_ : (x : A) → B x → ∑ A B
+data Σ (A : Set ℓ) (B : A → Set o) : Set (ℓ ⊔ o) where
+  _,_ : (x : A) → B x → Σ A B
 
 infixr 4 _,_
-infix 2 ∑-syntax
+infix 2 Σ-syntax
 
-∑-syntax : (A : Set o) → (A → Set ℓ) → Set (o ⊔ ℓ)
-∑-syntax = ∑
+Σ-syntax : (A : Set o) → (A → Set ℓ) → Set (o ⊔ ℓ)
+Σ-syntax = Σ
 
-syntax ∑-syntax A (λ x → B) = ∑[ x ∈ A ] B
+syntax Σ-syntax A (λ x → B) = Σ[ x ∈ A ] B
 
 module _ {A : Set m} {B : A → Set n} where 
-  ∑-ind : {P  : ∑ A B → Set o}
+  Σ-ind : {P  : Σ A B → Set o}
         → (pₚ : (a : A) → (b : B a) → P (a , b))
-        → ((z : ∑ A B) → P z)
-  ∑-ind pₚ (a , b) = pₚ a b
+        → ((z : Σ A B) → P z)
+  Σ-ind pₚ (a , b) = pₚ a b
 
-  pr₁ : ∑ A B → A
-  pr₁ = ∑-ind (λ a _ → a)
+  pr₁ : Σ A B → A
+  pr₁ = Σ-ind (λ a _ → a)
 
-  pr₂ : (z : ∑ A B) → B (pr₁ z)
-  pr₂ = ∑-ind (λ _ b → b)
+  pr₂ : (z : Σ A B) → B (pr₁ z)
+  pr₂ = Σ-ind (λ _ b → b)
 
-  ev-pair : {P  : ∑ A B → Set o}
-          → ((z : ∑ A B) → P z)
+  ev-pair : {P  : Σ A B → Set o}
+          → ((z : Σ A B) → P z)
           → ((a : A) → (b : B a) → P (a , b))
   ev-pair p a b = p (a , b)
 ```
@@ -138,13 +138,13 @@ module _ {A : Set m} {B : A → Set n} where
 ## Product type
 ```agda
 _×_ : (A : Set o) → (B : Set ℓ) → Set (o ⊔ ℓ)
-A × B = ∑ A (λ _ → B)
+A × B = Σ A (λ _ → B)
 
 ×-ind : {A : Set o} → {B : Set ℓ}
       → {P  : A × B → Set m}
       → (pₚ : (a : A) → (b : B) → P (a , b))
       → ((z : A × B) → P z)
-×-ind = ∑-ind
+×-ind = Σ-ind
 ```
 
 # Exercises
