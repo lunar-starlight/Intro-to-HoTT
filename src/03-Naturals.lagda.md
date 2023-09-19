@@ -54,45 +54,54 @@ _+_ : Bin ℕ
 _+_ m = ind m (λ _ m+n → succ m+n)
 ```
 
+```agda
+pred : ℕ → ℕ
+pred = ind zero λ n _ → n
+```
+
+```agda
+_-_ : Bin ℕ
+_-_ m = ind m (λ _ m-n → pred m-n)
+```
+
 # Exercises
 
 ## 3.1
 ### (a) Multiplication
 ```agda
 _⋅_ : Bin ℕ
-_⋅_ = {!   !}
+_⋅_ m = ind zero (λ n m⋅n → m⋅n + m)
 ```
 ### (b) Exponentiation
 ```agda
 _^_ : Bin ℕ
-_^_ = {!   !}
+_^_ m = ind one (λ n m^n → m^n ⋅ m)
 ```
-
 ## 3.2
 ```agda
 _∧_ : Bin ℕ
 _∨_ : Bin ℕ
-_∧_ = {!   !}
-_∨_ = {!   !}
+_∧_ = ind (λ _ → zero) (λ _ m∧ → ind  zero    (λ n _ → succ (m∧ n)))
+_∨_ = ind (λ n →    n) (λ m m∨ → ind (succ m) (λ n _ → succ (m∨ n)))
 ```
 
 ## 3.3
 ### (a) Triangular numbers
 ```agda
 tri : ℕ → ℕ
-tri = {!   !}
+tri = ind zero (λ n triₙ → succ n + triₙ)
 ```
 ### (b) Factorial
 ```agda
 fact : ℕ → ℕ
-fact = {!   !}
+fact = ind one (λ n factₙ → succ n ⋅ factₙ)
 ```
 
 ## 3.4 Binomial
 Binomial symbol with bin k n meaning "chose k from n".
 ```agda
 bin : Bin ℕ
-bin = {!   !}
+bin = ind (λ _ → one) (λ _ binₖ → ind zero (λ n x → binₖ n + x))
 ```
 
 ## 3.5 Fibonacci
@@ -103,13 +112,19 @@ ind₂ : {P  : ℕ → Set o}
      → (p₁ : P one)
      → (pₛ : (n : ℕ) → P n → P (succ n) → P (succ² n))
      → ((n : ℕ) → P n)
-ind₂ {o} {Q} p₀ p₁ pₛ = {!   !}
+-- ind₂ {o} {Q} p₀ p₁ pₛ = ind p₀ (λ n → ind {P = λ n → Q n → Q (succ n)} (λ _ → p₁) (λ m f x → {!   !}) {!   !})
+ind₂         p₀ p₁ pₛ zero = p₀
+ind₂         p₀ p₁ pₛ (succ zero) = p₁
+ind₂ {o} {P} p₀ p₁ pₛ (succ (succ n)) = ind₂ p₁ (pₛ zero p₀ p₁) (λ n → pₛ (succ n)) (succ n)
 
+-- {-# TERMINATING #-}
 fib : ℕ → ℕ
-fib = {!   !}
+fib = ind₂ zero one (λ _ fibₙ fibₛₙ → fibₛₙ + fibₙ)
+-- fib = ind one (ind (λ _ → one) (λ n f x → f n + fib n))
 
--- This tests the function above on a few values if you normalize `fibl`
 -- -- 0 ∷ 1 ∷ 1 ∷ 2 ∷ 3 ∷ 5 ∷ 8 ∷ 13 ∷ 21 ∷ 34 ∷ []
+-- -- 0 ∷ 1 ∷ 2 ∷ 4 ∷ 8 ∷ 15 ∷ 26 ∷ 42 ∷ 64 ∷ 93 ∷ []
+-- -- 0 ∷ 1 ∷ 1 ∷ 1 ∷ 2 ∷ 5 ∷ 11 ∷ 21 ∷ 36 ∷ 57 ∷ []
 -- fib' = toNat ∘ fib
 -- open import Data.List using (List; []; _∷_)
 -- fibl : List Nat
@@ -118,7 +133,9 @@ fib = {!   !}
 
 ## 3.6 Division by two
 ```agda
+-- {-# TERMINATING #-}
 div₂ : ℕ → ℕ
-div₂ = {!   !}
+div₂ = ind₂ zero zero (λ _ div₂n _ → succ div₂n)
+-- div₂ = ind zero (ind (λ _ → zero) (λ n f x → {!   !}))
 ```
 
