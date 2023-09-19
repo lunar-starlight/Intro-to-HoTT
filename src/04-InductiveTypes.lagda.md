@@ -32,6 +32,7 @@ pt = 𝟙-ind
 ```
 
 # Empty type
+
 ```agda
 data 𝟘 : Set where
 
@@ -103,6 +104,7 @@ succℤ = ℤ-ind 1ℤ (in-pos one) 0ℤ (λ n _ → in-pos (succ² n)) (λ n _ 
 ```
 
 # Dependent pair type
+
 ```agda
 data ∑ (A : Set ℓ) (B : A → Set o) : Set (ℓ ⊔ o) where
   _,_ : (x : A) → B x → ∑ A B
