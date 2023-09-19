@@ -44,8 +44,8 @@ ind : {P  : ℕ → Set o}
     → (p₀ : P zero)
     → (pₛ : (n : ℕ) → P n → P (succ n))
     → ((n : ℕ) → P n)
-ind         p₀ pₛ zero = p₀
-ind {o} {P} p₀ pₛ (succ n) = ind {o} {P ∘ succ} (pₛ zero p₀) (pₛ ∘ succ) n
+ind         p₀ pₛ  zero    = p₀
+ind {o} {P} p₀ pₛ (succ n) = pₛ n (ind p₀ pₛ n)
 ```
 
 ## Addition
