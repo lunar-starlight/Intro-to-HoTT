@@ -1,0 +1,4 @@
+name: intro-to-hott
+include:
+  agda-stdlib/src
+  src
